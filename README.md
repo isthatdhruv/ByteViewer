@@ -43,17 +43,21 @@ all as SVG. The app icon and launch screen are rendered from them.
 Every GitHub Release carries `ByteViewer-<version>.ipa`. It is **unsigned**, so it cannot be
 installed by tapping it; sign it with your own Apple ID using one of these:
 
-- [Sideloadly](https://sideloadly.io) (Windows or Mac): drag the IPA in, enter your Apple ID, Start.
+- **[ByteLoader](https://byteloader.byteknotlabs.com) (recommended, Windows 10/11):** ByteKnot Labs'
+  own free sideloader. [Download for Windows](https://byteloader.byteknotlabs.com/download), install,
+  plug in your iPhone or iPad over USB, sign in with your Apple ID, pick the IPA. It renews the
+  7-day signature on its own while the phone is reachable.
 - [AltStore](https://altstore.io): My Apps, `+`, pick the IPA.
 - TrollStore on supported iOS versions installs it without signing.
 
-With a free Apple ID the install expires after 7 days and the tool must refresh it;
-a paid developer account removes that limit.
+With a free Apple ID the signature expires after 7 days and the tool must refresh it;
+a paid developer account removes that limit. Only one sideloading tool can hold the development
+certificate of an Apple ID at a time, so stick with one.
 
-The IPA carries an App Group entitlement that the widget uses to read your site list.
-AltStore and Sideloadly register the group with your Apple ID when they sign the app
-(the app reads whatever group id they assign from its provisioning profile). If a tool
-strips entitlements, the app still works; only the widget shows "Add sites in ByteViewer".
+The IPA carries an App Group entitlement that the widget uses to read your site list. The app
+reads whatever group id the signing tool assigns from its provisioning profile. If a tool strips
+or does not register the entitlement, the app still works; only the widget shows
+"Add sites in ByteViewer".
 
 ## Building
 
@@ -89,6 +93,7 @@ Minimum iOS version: 16.0. No third-party dependencies.
 
 ## Notes
 
-- To allow plain `http://` URLs, add an `Info.plist` with an `NSAppTransportSecurity` exception.
+- Plain `http://` loads are allowed by the shipped `Info.plist` (`NSAllowsArbitraryLoadsInWebContent`)
+  but only used when a site's "Allow plain http://" switch is on; otherwise URLs are upgraded to https.
 - Apple's App Store guideline 4.2 can reject apps that are only a website wrapper. Installing on
   your own devices is not affected.
