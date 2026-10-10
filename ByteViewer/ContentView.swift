@@ -99,6 +99,10 @@ struct ContentView: View {
                 } footer: {
                     Text("Swipe right on a site to open it at launch or put it on the Home Screen. The first four sites also appear when you long-press the app icon and in the widget.")
                 }
+
+                Section {
+                    BrandRow()
+                }
             }
             .navigationTitle("ByteViewer")
             .toolbar {
@@ -182,6 +186,37 @@ struct ContentView: View {
     }
 }
 
+/// ByteKnot Labs branding: mark, wordmark, version and a link to the project.
+private struct BrandRow: View {
+    private var version: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0"
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image("BrandMark")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 44, height: 44)
+            VStack(alignment: .leading, spacing: 2) {
+                (Text("Byte").foregroundColor(.primary) + Text("Viewer").foregroundColor(.secondary))
+                    .font(.headline.weight(.bold))
+                Text("by ByteKnot Labs  ·  v\(version)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            if let url = URL(string: "https://github.com/isthatdhruv/ByteViewer") {
+                Link(destination: url) {
+                    Image(systemName: "arrow.up.right.square")
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.vertical, 4)
+    }
+}
+
 /// The site's cached icon, or a globe on the site's theme colour.
 struct SiteIconView: View {
     let site: Site
@@ -196,7 +231,7 @@ struct SiteIconView: View {
                     .scaledToFill()
             } else {
                 ZStack {
-                    ThemeColor.color(from: site.themeColor) ?? Color.accentColor
+                    ThemeColor.color(from: site.themeColor) ?? Color(red: 0.2, green: 0.21, blue: 0.24)
                     Image(systemName: "globe")
                         .font(.system(size: size * 0.5, weight: .medium))
                         .foregroundStyle(.white)

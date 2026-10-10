@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1240" viewBox="0 0 1240 1240">
+  <!-- ByteViewer logo lockup: mark + wordmark on dark. ByteKnot Labs. -->
+  <defs>
+    <radialGradient id="bgGlow" cx="0.5" cy="0.42" r="0.6">
+      <stop offset="0" stop-color="#1C1D21"/>
+      <stop offset="1" stop-color="#0A0B0E"/>
+    </radialGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#36383D"/>
+      <stop offset="1" stop-color="#191A1E"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#CDCFD4"/>
+      <stop offset="0.45" stop-color="#5E6066"/>
+      <stop offset="1" stop-color="#A6A8AE"/>
+    </linearGradient>
+    <linearGradient id="frame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E6E8EC"/>
+      <stop offset="1" stop-color="#ACAEB4"/>
+    </linearGradient>
+    <linearGradient id="content" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4F5157"/>
+      <stop offset="1" stop-color="#2A2C31"/>
+    </linearGradient>
+    <linearGradient id="eye" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EAECF0"/>
+      <stop offset="1" stop-color="#A3A5AB"/>
+    </linearGradient>
+    <linearGradient id="pupil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B8BAC0"/>
+      <stop offset="1" stop-color="#85878D"/>
+    </linearGradient>
+    <linearGradient id="silverText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E9EBEF"/>
+      <stop offset="1" stop-color="#8E9096"/>
+    </linearGradient>
+    <clipPath id="tileClip">
+      <rect x="385" y="285" width="470" height="470" rx="95"/>
+    </clipPath>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <filter id="tileShadow" x="-30%" y="-30%" width="160%" height="170%">
+      <feDropShadow dx="0" dy="24" stdDeviation="28" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+  </defs>
+
+  <rect width="1240" height="1240" fill="url(#bgGlow)"/>
+
+  <g filter="url(#tileShadow)">
+    <rect x="385" y="285" width="470" height="470" rx="95" fill="url(#tile)"/>
+  </g>
+  <g clip-path="url(#tileClip)">
+    <path d="M385 285H855V345L445 755H385Z" fill="#FFFFFF" fill-opacity="0.05"/>
+  </g>
+  <rect x="386.5" y="286.5" width="467" height="467" rx="93.5" fill="none" stroke="url(#rim)" stroke-width="3"/>
+
+  <g transform="translate(385 285)">
+    <g filter="url(#shadow)">
+      <rect x="80" y="90" width="290" height="280" rx="28" fill="url(#frame)"/>
+      <rect x="116" y="170" width="218" height="180" rx="18" fill="url(#content)"/>
+      <circle cx="130" cy="135" r="11" fill="#F6F7F9"/>
+      <circle cx="162" cy="135" r="11" fill="#F6F7F9"/>
+      <circle cx="195" cy="135" r="11" fill="#F6F7F9"/>
+    </g>
+    <g filter="url(#shadow)">
+      <path d="M160 293A159 159 0 0 1 430 293A159 159 0 0 1 160 293Z" fill="url(#eye)"/>
+    </g>
+    <circle cx="295" cy="293" r="52" fill="#3A3C42"/>
+    <circle cx="295" cy="293" r="30" fill="url(#pupil)"/>
+  </g>
+
+  <text x="620" y="908" text-anchor="middle" font-family="'SF Pro Display', 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif" font-weight="700" font-size="132" letter-spacing="-3"><tspan fill="#FFFFFF">Byte</tspan><tspan fill="url(#silverText)">Viewer</tspan></text>
+</svg>

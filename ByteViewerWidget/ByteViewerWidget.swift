@@ -94,7 +94,7 @@ struct SitesWidgetView: View {
                     .scaledToFill()
             } else {
                 ZStack {
-                    ThemeColor.color(from: site.themeColor) ?? Color.accentColor
+                    ThemeColor.color(from: site.themeColor) ?? Color(red: 0.2, green: 0.21, blue: 0.24)
                     Image(systemName: "globe")
                         .font(.system(size: size * 0.5, weight: .medium))
                         .foregroundStyle(.white)

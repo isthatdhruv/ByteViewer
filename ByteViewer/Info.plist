@@ -28,5 +28,14 @@
 	<string>Websites you open can use your location for maps and nearby results when you allow it.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Face ID unlocks sites you have protected.</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>LaunchBackground</string>
+		<key>UIImageName</key>
+		<string>BrandMark</string>
+		<key>UIImageRespectsSafeAreaInsets</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

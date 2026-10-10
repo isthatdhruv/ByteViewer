@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- ByteViewer app icon (full bleed; iOS applies the rounded mask). ByteKnot Labs. -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#36383D"/>
+      <stop offset="1" stop-color="#17181C"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.22" cy="0.18" r="0.9">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.14"/>
+      <stop offset="0.6" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="frame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#E6E8EC"/>
+      <stop offset="1" stop-color="#ACAEB4"/>
+    </linearGradient>
+    <linearGradient id="content" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4F5157"/>
+      <stop offset="1" stop-color="#2A2C31"/>
+    </linearGradient>
+    <linearGradient id="eye" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EAECF0"/>
+      <stop offset="1" stop-color="#A3A5AB"/>
+    </linearGradient>
+    <linearGradient id="pupil" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B8BAC0"/>
+      <stop offset="1" stop-color="#85878D"/>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#tile)"/>
+  <path d="M0 0H1024V130L130 1024H0Z" fill="#FFFFFF" fill-opacity="0.05"/>
+  <rect width="1024" height="1024" fill="url(#glow)"/>
+
+  <g transform="translate(2 52) scale(2)">
+    <g filter="url(#shadow)">
+      <rect x="80" y="90" width="290" height="280" rx="28" fill="url(#frame)"/>
+      <rect x="116" y="170" width="218" height="180" rx="18" fill="url(#content)"/>
+      <circle cx="130" cy="135" r="11" fill="#F6F7F9"/>
+      <circle cx="162" cy="135" r="11" fill="#F6F7F9"/>
+      <circle cx="195" cy="135" r="11" fill="#F6F7F9"/>
+    </g>
+    <g filter="url(#shadow)">
+      <path d="M160 293A159 159 0 0 1 430 293A159 159 0 0 1 160 293Z" fill="url(#eye)"/>
+    </g>
+    <circle cx="295" cy="293" r="52" fill="#3A3C42"/>
+    <circle cx="295" cy="293" r="30" fill="url(#pupil)"/>
+  </g>
+</svg>

@@ -1,7 +1,16 @@
+<p align="center">
+  <img src="Branding/byteviewer-logo.svg" alt="ByteViewer" width="360">
+</p>
+
 # ByteViewer
+
+**by ByteKnot Labs**
 
 A tiny iOS app that opens any website as a full-screen app, the way Dodo WebView does.
 No browser bars, no tabs, just the page, laid out with the correct viewport and safe areas.
+
+Logo assets live in [`Branding/`](Branding/): the full lockup, the app icon and the standalone mark,
+all as SVG. The app icon and launch screen are rendered from them.
 
 ## What it does
 
