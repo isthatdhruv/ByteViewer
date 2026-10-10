@@ -36,11 +36,10 @@ enum UserAgent {
 }
 
 struct WebView: UIViewRepresentable {
-    let url: URL
-    let desktopMode: Bool
-    let edgeToEdge: Bool
+    let site: Site
     @ObservedObject var model: WebViewModel
     var onShowControls: () -> Void = {}
+    var onMetadata: (PageMetadata) -> Void = { _ in }
 
     /// Appends `viewport-fit=cover` to the page's viewport meta so it draws under the
     /// notch and home indicator and `env(safe-area-inset-*)` works. Pages that have no
@@ -54,6 +53,24 @@ struct WebView: UIViewRepresentable {
     })();
     """
 
+    /// Collects icon links and the theme colour of the loaded page.
+    private static let metadataScript = """
+    (function () {
+      function abs(h) { try { return new URL(h, document.baseURI).href; } catch (e) { return null; } }
+      var touch = [], plain = [];
+      var links = document.querySelectorAll('link[rel][href]');
+      for (var i = 0; i < links.length; i++) {
+        var rel = (links[i].getAttribute('rel') || '').toLowerCase();
+        var href = abs(links[i].getAttribute('href'));
+        if (!href) continue;
+        if (rel.indexOf('apple-touch-icon') >= 0) touch.push(href);
+        else if (rel.split(' ').indexOf('icon') >= 0) plain.push(href);
+      }
+      var meta = document.querySelector('meta[name="theme-color"]');
+      return JSON.stringify({ icons: touch.concat(plain), themeColor: meta ? meta.getAttribute('content') : null });
+    })();
+    """
+
     func makeCoordinator() -> Coordinator { Coordinator(self) }
 
     func makeUIView(context: Context) -> WKWebView {
@@ -61,24 +78,29 @@ struct WebView: UIViewRepresentable {
         config.allowsInlineMediaPlayback = true
         config.allowsPictureInPictureMediaPlayback = true
         config.mediaTypesRequiringUserActionForPlayback = []
-        config.websiteDataStore = .default()          // keeps cookies / logins between launches
-        config.defaultWebpagePreferences.preferredContentMode = desktopMode ? .desktop : .mobile
+        // Private mode keeps nothing between visits; otherwise cookies / logins persist.
+        config.websiteDataStore = site.privateMode ? .nonPersistent() : .default()
+        config.defaultWebpagePreferences.preferredContentMode = site.desktopMode ? .desktop : .mobile
         config.preferences.isElementFullscreenEnabled = true   // lets video players go fullscreen
         config.preferences.javaScriptCanOpenWindowsAutomatically = true
 
-        if edgeToEdge {
+        if site.edgeToEdge {
             config.userContentController.addUserScript(
                 WKUserScript(source: Self.edgeToEdgeScript, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
             )
         }
 
         let webView = WKWebView(frame: .zero, configuration: config)
-        webView.customUserAgent = UserAgent.string(desktop: desktopMode)
-        webView.allowsBackForwardNavigationGestures = true
+        webView.customUserAgent = UserAgent.string(desktop: site.desktopMode)
+        webView.allowsBackForwardNavigationGestures = !site.kioskMode
+        webView.allowsLinkPreview = !site.kioskMode
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
         webView.backgroundColor = .systemBackground
         webView.isOpaque = true
+        if let color = ThemeColor.uiColor(from: site.themeColor) {
+            webView.underPageBackgroundColor = color
+        }
 
         // The web view is laid out edge-to-edge (see SiteView). Leaving the inset behaviour
         // on `.automatic` makes WebKit treat the safe areas exactly like Safari does:
@@ -87,9 +109,11 @@ struct WebView: UIViewRepresentable {
         // Setting `.never` here would push content under the status bar / notch.
         webView.scrollView.contentInsetAdjustmentBehavior = .automatic
 
-        let refresh = UIRefreshControl()
-        refresh.addTarget(context.coordinator, action: #selector(Coordinator.handleRefresh), for: .valueChanged)
-        webView.scrollView.refreshControl = refresh
+        if !site.kioskMode {
+            let refresh = UIRefreshControl()
+            refresh.addTarget(context.coordinator, action: #selector(Coordinator.handleRefresh), for: .valueChanged)
+            webView.scrollView.refreshControl = refresh
+        }
 
         // Three-finger tap brings the floating controls back after hiding them.
         let tap = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleThreeFingerTap))
@@ -99,7 +123,9 @@ struct WebView: UIViewRepresentable {
 
         context.coordinator.observe(webView)
         model.webView = webView
-        webView.load(URLRequest(url: url))
+        if let url = site.resolvedURL {
+            webView.load(URLRequest(url: url))
+        }
         return webView
     }
 
@@ -116,6 +142,7 @@ struct WebView: UIViewRepresentable {
     final class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIGestureRecognizerDelegate {
         var parent: WebView
         private var observations: [NSKeyValueObservation] = []
+        private var upgradedURLs: Set<URL> = []
 
         init(_ parent: WebView) {
             self.parent = parent
@@ -157,14 +184,40 @@ struct WebView: UIViewRepresentable {
                 decisionHandler(.cancel)
                 return
             }
-            switch url.scheme?.lowercased() {
-            case "http", "https", "about", "blob", "data", "javascript":
+            let scheme = url.scheme?.lowercased() ?? ""
+            let site = parent.site
+
+            if scheme == "http" || scheme == "https" {
+                // Upgrade plain http once; if the secure site sends us back to http, let it through.
+                if scheme == "http", !site.allowHTTP, !upgradedURLs.contains(url),
+                   var comps = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                    comps.scheme = "https"
+                    if let secure = comps.url {
+                        upgradedURLs.insert(url)
+                        decisionHandler(.cancel)
+                        webView.load(URLRequest(url: secure))
+                        return
+                    }
+                }
+                let isMainFrame = navigationAction.targetFrame?.isMainFrame ?? true
+                if site.stayInSite, isMainFrame, navigationAction.navigationType == .linkActivated,
+                   !site.owns(host: url.host) {
+                    UIApplication.shared.open(url)
+                    decisionHandler(.cancel)
+                    return
+                }
                 decisionHandler(.allow)
-            default:
-                // mailto:, tel:, sms:, maps:, app links … hand them to the system.
-                UIApplication.shared.open(url)
-                decisionHandler(.cancel)
+                return
             }
+
+            if ["about", "blob", "data", "javascript"].contains(scheme) {
+                decisionHandler(.allow)
+                return
+            }
+
+            // mailto:, tel:, sms:, maps:, app links … hand them to the system.
+            UIApplication.shared.open(url)
+            decisionHandler(.cancel)
         }
 
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -174,6 +227,7 @@ struct WebView: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             webView.scrollView.refreshControl?.endRefreshing()
             parent.model.errorMessage = nil
+            collectMetadata(from: webView)
         }
 
         func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -194,6 +248,21 @@ struct WebView: UIViewRepresentable {
             // Cancelled loads and policy-change interruptions are not real errors.
             if nsError.code == NSURLErrorCancelled || nsError.code == 102 { return }
             parent.model.errorMessage = nsError.localizedDescription
+        }
+
+        /// Reads icon links and theme colour from pages that belong to the site.
+        private func collectMetadata(from webView: WKWebView) {
+            guard let pageURL = webView.url, parent.site.owns(host: pageURL.host) else { return }
+            webView.evaluateJavaScript(WebView.metadataScript) { [weak self] result, _ in
+                guard let self,
+                      let json = result as? String,
+                      let data = json.data(using: .utf8),
+                      let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return }
+                var icons = (object["icons"] as? [String] ?? []).compactMap { URL(string: $0) }
+                icons.append(contentsOf: IconFetcher.fallbackIcons(for: pageURL))
+                let theme = object["themeColor"] as? String
+                self.parent.onMetadata(PageMetadata(iconURLs: icons, themeColor: theme))
+            }
         }
 
         // MARK: Popups & JavaScript dialogs

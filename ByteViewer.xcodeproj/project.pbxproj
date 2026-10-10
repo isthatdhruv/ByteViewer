@@ -14,7 +14,41 @@
 		BB0000000000000000000005 /* SiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000005 /* SiteStore.swift */; };
 		BB0000000000000000000006 /* Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000006 /* Orientation.swift */; };
 		BB0000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000007 /* Assets.xcassets */; };
+		BB0000000000000000000008 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000008 /* AppDelegate.swift */; };
+		BB0000000000000000000009 /* DeepLinkRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000009 /* DeepLinkRouter.swift */; };
+		BB000000000000000000000A /* AppIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000A /* AppIntents.swift */; };
+		BB000000000000000000000B /* IconFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000B /* IconFetcher.swift */; };
+		BB000000000000000000000C /* Authenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000C /* Authenticator.swift */; };
+		BB000000000000000000000D /* LauncherSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000D /* LauncherSheet.swift */; };
+		BB0000000000000000000011 /* Site.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000011 /* Site.swift */; };
+		BB0000000000000000000021 /* Site.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000011 /* Site.swift */; };
+		BB0000000000000000000022 /* ByteViewerWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000012 /* ByteViewerWidget.swift */; };
+		BB0000000000000000000023 /* ByteViewerWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000015 /* ByteViewerWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CD0000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000002 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000003;
+			remoteInfo = ByteViewerWidget;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FF0000000000000000000004 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				BB0000000000000000000023 /* ByteViewerWidget.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AA0000000000000000000001 /* ByteViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteViewerApp.swift; sourceTree = "<group>"; };
@@ -24,11 +58,31 @@
 		AA0000000000000000000005 /* SiteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiteStore.swift; sourceTree = "<group>"; };
 		AA0000000000000000000006 /* Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orientation.swift; sourceTree = "<group>"; };
 		AA0000000000000000000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA0000000000000000000008 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA0000000000000000000009 /* DeepLinkRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkRouter.swift; sourceTree = "<group>"; };
+		AA000000000000000000000A /* AppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIntents.swift; sourceTree = "<group>"; };
+		AA000000000000000000000B /* IconFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconFetcher.swift; sourceTree = "<group>"; };
+		AA000000000000000000000C /* Authenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authenticator.swift; sourceTree = "<group>"; };
+		AA000000000000000000000D /* LauncherSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LauncherSheet.swift; sourceTree = "<group>"; };
+		AA000000000000000000000E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000000000000000000000F /* ByteViewer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ByteViewer.entitlements; sourceTree = "<group>"; };
 		AA0000000000000000000010 /* ByteViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ByteViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA0000000000000000000011 /* Site.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Site.swift; sourceTree = "<group>"; };
+		AA0000000000000000000012 /* ByteViewerWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteViewerWidget.swift; sourceTree = "<group>"; };
+		AA0000000000000000000013 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA0000000000000000000014 /* ByteViewerWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ByteViewerWidget.entitlements; sourceTree = "<group>"; };
+		AA0000000000000000000015 /* ByteViewerWidget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ByteViewerWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		FF0000000000000000000002 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF0000000000000000000006 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -42,6 +96,8 @@
 			isa = PBXGroup;
 			children = (
 				EE0000000000000000000002 /* ByteViewer */,
+				EE0000000000000000000004 /* Shared */,
+				EE0000000000000000000005 /* ByteViewerWidget */,
 				EE0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,12 +106,20 @@
 			isa = PBXGroup;
 			children = (
 				AA0000000000000000000001 /* ByteViewerApp.swift */,
+				AA0000000000000000000008 /* AppDelegate.swift */,
 				AA0000000000000000000002 /* ContentView.swift */,
 				AA0000000000000000000003 /* SiteView.swift */,
+				AA000000000000000000000D /* LauncherSheet.swift */,
 				AA0000000000000000000004 /* WebView.swift */,
 				AA0000000000000000000005 /* SiteStore.swift */,
+				AA000000000000000000000B /* IconFetcher.swift */,
+				AA0000000000000000000009 /* DeepLinkRouter.swift */,
+				AA000000000000000000000A /* AppIntents.swift */,
+				AA000000000000000000000C /* Authenticator.swift */,
 				AA0000000000000000000006 /* Orientation.swift */,
 				AA0000000000000000000007 /* Assets.xcassets */,
+				AA000000000000000000000E /* Info.plist */,
+				AA000000000000000000000F /* ByteViewer.entitlements */,
 			);
 			path = ByteViewer;
 			sourceTree = "<group>";
@@ -64,8 +128,27 @@
 			isa = PBXGroup;
 			children = (
 				AA0000000000000000000010 /* ByteViewer.app */,
+				AA0000000000000000000015 /* ByteViewerWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		EE0000000000000000000004 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000011 /* Site.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		EE0000000000000000000005 /* ByteViewerWidget */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000012 /* ByteViewerWidget.swift */,
+				AA0000000000000000000013 /* Info.plist */,
+				AA0000000000000000000014 /* ByteViewerWidget.entitlements */,
+			);
+			path = ByteViewerWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -78,15 +161,34 @@
 				FF0000000000000000000001 /* Sources */,
 				FF0000000000000000000002 /* Frameworks */,
 				FF0000000000000000000003 /* Resources */,
+				FF0000000000000000000004 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CE0000000000000000000001 /* PBXTargetDependency */,
 			);
 			name = ByteViewer;
 			productName = ByteViewer;
 			productReference = AA0000000000000000000010 /* ByteViewer.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000003 /* ByteViewerWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD0000000000000000000003 /* Build configuration list for PBXNativeTarget "ByteViewerWidget" */;
+			buildPhases = (
+				FF0000000000000000000005 /* Sources */,
+				FF0000000000000000000006 /* Frameworks */,
+				FF0000000000000000000007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ByteViewerWidget;
+			productName = ByteViewerWidget;
+			productReference = AA0000000000000000000015 /* ByteViewerWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -99,6 +201,9 @@
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					A00000000000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					A00000000000000000000003 = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
@@ -117,6 +222,7 @@
 			projectRoot = "";
 			targets = (
 				A00000000000000000000001 /* ByteViewer */,
+				A00000000000000000000003 /* ByteViewerWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -130,6 +236,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FF0000000000000000000007 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -138,15 +251,39 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB0000000000000000000001 /* ByteViewerApp.swift in Sources */,
+				BB0000000000000000000008 /* AppDelegate.swift in Sources */,
 				BB0000000000000000000002 /* ContentView.swift in Sources */,
 				BB0000000000000000000003 /* SiteView.swift in Sources */,
+				BB000000000000000000000D /* LauncherSheet.swift in Sources */,
 				BB0000000000000000000004 /* WebView.swift in Sources */,
 				BB0000000000000000000005 /* SiteStore.swift in Sources */,
+				BB000000000000000000000B /* IconFetcher.swift in Sources */,
+				BB0000000000000000000009 /* DeepLinkRouter.swift in Sources */,
+				BB000000000000000000000A /* AppIntents.swift in Sources */,
+				BB000000000000000000000C /* Authenticator.swift in Sources */,
 				BB0000000000000000000006 /* Orientation.swift in Sources */,
+				BB0000000000000000000011 /* Site.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FF0000000000000000000005 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BB0000000000000000000022 /* ByteViewerWidget.swift in Sources */,
+				BB0000000000000000000021 /* Site.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CE0000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000003 /* ByteViewerWidget */;
+			targetProxy = CD0000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		CC0000000000000000000001 /* Debug */ = {
@@ -273,10 +410,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ByteViewer/ByteViewer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ByteViewer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ByteViewer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -303,10 +442,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ByteViewer/ByteViewer.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ByteViewer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ByteViewer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -322,6 +463,58 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.example.ByteViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CC0000000000000000000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ByteViewerWidget/ByteViewerWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ByteViewerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ByteViewer;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ByteViewer.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CC0000000000000000000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ByteViewerWidget/ByteViewerWidget.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ByteViewerWidget/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ByteViewer;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.ByteViewer.Widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -345,6 +538,15 @@
 			buildConfigurations = (
 				CC0000000000000000000003 /* Debug */,
 				CC0000000000000000000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD0000000000000000000003 /* Build configuration list for PBXNativeTarget "ByteViewerWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC0000000000000000000005 /* Debug */,
+				CC0000000000000000000006 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

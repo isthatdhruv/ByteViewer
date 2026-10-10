@@ -48,6 +48,16 @@ jobs:
             CURRENT_PROJECT_VERSION="${{ steps.version.outputs.build }}" \
             build
 
+      - name: Embed entitlements with an ad-hoc signature
+        # No certificate on the runner, but an ad-hoc signature still carries the App Group
+        # entitlements, which AltStore / Sideloadly / TrollStore read when they re-sign the app.
+        run: |
+          APP="build/Build/Products/Release-iphoneos/ByteViewer.app"
+          test -d "$APP"
+          codesign --force --sign - --entitlements ByteViewerWidget/ByteViewerWidget.entitlements "$APP/PlugIns/ByteViewerWidget.appex"
+          codesign --force --sign - --entitlements ByteViewer/ByteViewer.entitlements "$APP"
+          codesign -d --entitlements - "$APP" || true
+
       - name: Package IPA
         id: package
         run: |

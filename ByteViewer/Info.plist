@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>com.example.ByteViewer</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>byteviewer</string>
+			</array>
+		</dict>
+	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Websites you open can use the camera for video calls, scanning and photos when you allow it.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Websites you open can use the microphone for calls and voice features when you allow it.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Websites you open can use your location for maps and nearby results when you allow it.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Face ID unlocks sites you have protected.</string>
+</dict>
+</plist>

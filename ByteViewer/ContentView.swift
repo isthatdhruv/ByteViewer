@@ -2,9 +2,11 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var store = SiteStore()
+    @ObservedObject private var router = DeepLinkRouter.shared
     @State private var quickURL = ""
     @State private var openSite: Site?
     @State private var editingSite: Site?
+    @State private var launcherSite: Site?
     @State private var showingAdd = false
     @State private var didAutoOpen = false
 
@@ -25,7 +27,7 @@ struct ContentView: View {
                             Image(systemName: "arrow.right.circle.fill")
                                 .font(.title2)
                         }
-                        .disabled(Site.normalize(quickURL) == nil)
+                        .disabled(Site.normalize(quickURL, allowHTTP: true) == nil)
                     }
                 }
 
@@ -39,7 +41,7 @@ struct ContentView: View {
                         Button {
                             openSite = site
                         } label: {
-                            SiteRow(site: site, isDefault: isDefault)
+                            SiteRow(site: site, isDefault: isDefault, iconVersion: store.iconVersion)
                         }
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
@@ -61,12 +63,23 @@ struct ContentView: View {
                                 Label(isDefault ? "Unset" : "Default", systemImage: isDefault ? "star.slash" : "star")
                             }
                             .tint(.yellow)
+                            Button {
+                                launcherSite = site
+                            } label: {
+                                Label("Home Screen", systemImage: "plus.app")
+                            }
+                            .tint(.blue)
                         }
                         .contextMenu {
                             Button {
                                 editingSite = site
                             } label: {
                                 Label("Edit", systemImage: "pencil")
+                            }
+                            Button {
+                                launcherSite = site
+                            } label: {
+                                Label("Add to Home Screen", systemImage: "plus.app")
                             }
                             Button {
                                 toggleDefault(site)
@@ -84,7 +97,7 @@ struct ContentView: View {
                 } header: {
                     Text("My sites")
                 } footer: {
-                    Text("Swipe right on a site to open it automatically at launch. Inside a site, use the ••• button, or tap with three fingers if you hid it.")
+                    Text("Swipe right on a site to open it at launch or put it on the Home Screen. The first four sites also appear when you long-press the app icon and in the widget.")
                 }
             }
             .navigationTitle("ByteViewer")
@@ -101,21 +114,35 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $showingAdd) {
-                SiteEditor(site: Site(name: "", url: "", desktopMode: isPad), title: "Add site") { store.add($0) }
+                SiteEditor(site: Site(name: "", url: "", desktopMode: isPad), title: "Add site", isNew: true) {
+                    store.add($0)
+                }
+                .environmentObject(store)
             }
             .sheet(item: $editingSite) { site in
                 SiteEditor(site: site, title: "Edit site") { store.update($0) }
+                    .environmentObject(store)
+            }
+            .sheet(item: $launcherSite) { site in
+                LauncherSheet(site: site)
+                    .environmentObject(store)
             }
             .fullScreenCover(item: $openSite) { site in
                 SiteView(site: site)
+                    .environmentObject(store)
             }
             .onAppear(perform: autoOpenIfNeeded)
+            .onReceive(router.$request) { request in
+                if let request { handle(request) }
+            }
         }
     }
 
     private func openQuick() {
-        guard Site.normalize(quickURL) != nil else { return }
-        openSite = Site(name: "", url: quickURL, desktopMode: isPad)
+        guard Site.normalize(quickURL, allowHTTP: true) != nil else { return }
+        var site = Site(name: "", url: quickURL, desktopMode: isPad)
+        site.allowHTTP = quickURL.lowercased().hasPrefix("http://")
+        openSite = site
     }
 
     private func toggleDefault(_ site: Site) {
@@ -125,23 +152,71 @@ struct ContentView: View {
     private func autoOpenIfNeeded() {
         guard !didAutoOpen else { return }
         didAutoOpen = true
-        guard let site = store.autoOpenSite else { return }
+        // A launch through a URL, Quick Action or the widget wins over the default site.
+        guard router.request == nil, let site = store.autoOpenSite else { return }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            openSite = site
+            if openSite == nil { openSite = site }
         }
+    }
+
+    /// Opens whatever a `byteviewer://` link, Quick Action, widget tap or Shortcut asked for.
+    private func handle(_ request: DeepLinkRequest) {
+        DispatchQueue.main.async { router.request = nil }
+        let target: Site?
+        switch request {
+        case .site(let id):
+            target = store.site(id: id)
+        case .url(let url):
+            var site = Site(name: "", url: url.absoluteString, desktopMode: isPad)
+            site.allowHTTP = true
+            target = site
+        }
+        guard let target else { return }
+        didAutoOpen = true
+        if openSite != nil {
+            openSite = nil
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { openSite = target }
+        } else {
+            openSite = target
+        }
+    }
+}
+
+/// The site's cached icon, or a globe on the site's theme colour.
+struct SiteIconView: View {
+    let site: Site
+    var size: CGFloat = 32
+    var version: Int = 0
+
+    var body: some View {
+        Group {
+            if let image = IconStore.image(for: site.id) {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            } else {
+                ZStack {
+                    ThemeColor.color(from: site.themeColor) ?? Color.accentColor
+                    Image(systemName: "globe")
+                        .font(.system(size: size * 0.5, weight: .medium))
+                        .foregroundStyle(.white)
+                }
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(RoundedRectangle(cornerRadius: size * 0.22, style: .continuous))
+        .id(version)
     }
 }
 
 private struct SiteRow: View {
     let site: Site
     let isDefault: Bool
+    let iconVersion: Int
 
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "globe")
-                .font(.title2)
-                .foregroundStyle(Color.accentColor)
-                .frame(width: 32)
+            SiteIconView(site: site, size: 36, version: iconVersion)
             VStack(alignment: .leading, spacing: 2) {
                 Text(site.displayName)
                     .font(.headline)
@@ -156,6 +231,10 @@ private struct SiteRow: View {
                 Image(systemName: "star.fill")
                     .foregroundStyle(.yellow)
             }
+            if site.requiresAuth {
+                Image(systemName: "lock.fill")
+                    .foregroundStyle(.secondary)
+            }
             if site.desktopMode {
                 Image(systemName: "desktopcomputer")
                     .foregroundStyle(.secondary)
@@ -169,14 +248,19 @@ private struct SiteRow: View {
 }
 
 struct SiteEditor: View {
+    @EnvironmentObject private var store: SiteStore
     @Environment(\.dismiss) private var dismiss
     @State private var draft: Site
+    @State private var confirmClear = false
+    @State private var showClearedNotice = false
     let title: String
+    let isNew: Bool
     let onSave: (Site) -> Void
 
-    init(site: Site, title: String, onSave: @escaping (Site) -> Void) {
+    init(site: Site, title: String, isNew: Bool = false, onSave: @escaping (Site) -> Void) {
         _draft = State(initialValue: site)
         self.title = title
+        self.isNew = isNew
         self.onSave = onSave
     }
 
@@ -190,6 +274,7 @@ struct SiteEditor: View {
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                 }
+
                 Section {
                     Toggle("Request desktop site", isOn: $draft.desktopMode)
                     Toggle("Hide status bar", isOn: $draft.hideStatusBar)
@@ -203,6 +288,34 @@ struct SiteEditor: View {
                     Text("Display")
                 } footer: {
                     Text("Edge to edge makes the page draw under the notch and home indicator. Leave it off unless the site handles safe areas itself.")
+                }
+
+                Section {
+                    Toggle("Stay in this site", isOn: $draft.stayInSite)
+                    Toggle("Keep screen awake", isOn: $draft.keepAwake)
+                    Toggle("Kiosk mode", isOn: $draft.kioskMode)
+                } header: {
+                    Text("Behaviour")
+                } footer: {
+                    Text("Stay in this site sends links to other websites to Safari. Kiosk mode hides the controls, the status bar and swipe navigation; a three-finger tap plus Face ID or passcode brings the controls back.")
+                }
+
+                Section {
+                    Toggle("Require Face ID / passcode", isOn: $draft.requiresAuth)
+                    Toggle("Private mode", isOn: $draft.privateMode)
+                    Toggle("Allow plain http://", isOn: $draft.allowHTTP)
+                } header: {
+                    Text("Privacy")
+                } footer: {
+                    Text("Private mode keeps no cookies or logins between visits. Plain http:// pages are not encrypted; use it only for local or trusted networks.")
+                }
+
+                if !isNew {
+                    Section {
+                        Button("Clear cookies and site data", role: .destructive) {
+                            confirmClear = true
+                        }
+                    }
                 }
             }
             .navigationTitle(title)
@@ -218,6 +331,15 @@ struct SiteEditor: View {
                     }
                     .disabled(draft.resolvedURL == nil)
                 }
+            }
+            .confirmationDialog("Clear all cookies, logins and cached data for \(draft.displayName)?",
+                                isPresented: $confirmClear, titleVisibility: .visible) {
+                Button("Clear site data", role: .destructive) {
+                    store.clearData(for: draft) { showClearedNotice = true }
+                }
+            }
+            .alert("Site data cleared", isPresented: $showClearedNotice) {
+                Button("OK") {}
             }
         }
     }

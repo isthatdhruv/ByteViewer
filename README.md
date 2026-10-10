@@ -18,7 +18,16 @@ No browser bars, no tabs, just the page, laid out with the correct viewport and 
 - Safari user agent so sites serve the same layout they give Safari; cookies and logins persist.
 - Pull to refresh, swipe back/forward, inline and full-screen video, `target="_blank"` links,
   JavaScript alerts, `mailto:` / `tel:` links handed to the system.
-- HTTPS only (App Transport Security default).
+- **Home-screen launchers**: every site has a `byteviewer://open?site=…` link, a Shortcuts
+  action ("Open Site") and an in-app guide for putting it on the Home Screen with its own icon.
+  Long-press the app icon for the first four sites.
+- **Widget** (small, medium, large) with one-tap shortcuts to your sites.
+- **Site icons and theme colour** are fetched automatically; the status bar and safe areas take
+  the site's colour.
+- Per-site switches: stay in the site (other domains open in Safari), keep screen awake,
+  kiosk mode, Face ID / passcode lock, private mode, allow plain `http://`.
+- Camera, microphone and location work for sites that ask for them.
+- Plain `http://` is upgraded to `https://` unless the site's "Allow plain http://" switch is on.
 
 ## Installing the IPA
 
@@ -31,6 +40,11 @@ installed by tapping it; sign it with your own Apple ID using one of these:
 
 With a free Apple ID the install expires after 7 days and the tool must refresh it;
 a paid developer account removes that limit.
+
+The IPA carries an App Group entitlement that the widget uses to read your site list.
+AltStore and Sideloadly register the group with your Apple ID when they sign the app
+(the app reads whatever group id they assign from its provisioning profile). If a tool
+strips entitlements, the app still works; only the widget shows "Add sites in ByteViewer".
 
 ## Building
 
