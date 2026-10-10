@@ -1,0 +1,76 @@
+name: Build IPA
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build unsigned IPA
+    runs-on: macos-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Work out version numbers
+        id: version
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "marketing=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "marketing=0.0.$GITHUB_RUN_NUMBER" >> "$GITHUB_OUTPUT"
+          fi
+          echo "build=$GITHUB_RUN_NUMBER" >> "$GITHUB_OUTPUT"
+
+      - name: Build (no code signing)
+        run: |
+          xcodebuild \
+            -project ByteViewer.xcodeproj \
+            -scheme ByteViewer \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination "generic/platform=iOS" \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            MARKETING_VERSION="${{ steps.version.outputs.marketing }}" \
+            CURRENT_PROJECT_VERSION="${{ steps.version.outputs.build }}" \
+            build
+
+      - name: Package IPA
+        id: package
+        run: |
+          APP="build/Build/Products/Release-iphoneos/ByteViewer.app"
+          test -d "$APP"
+          rm -rf Payload
+          mkdir Payload
+          cp -R "$APP" Payload/
+          IPA="ByteViewer-${{ steps.version.outputs.marketing }}.ipa"
+          zip -qr "$IPA" Payload
+          echo "ipa=$IPA" >> "$GITHUB_OUTPUT"
+          ls -la "$IPA"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ByteViewer-ipa
+          path: ${{ steps.package.outputs.ipa }}
+          if-no-files-found: error
+
+      - name: Publish GitHub release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.package.outputs.ipa }}
+          generate_release_notes: true
